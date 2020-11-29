@@ -1,0 +1,35 @@
+@import "~normalize.css";
+@import "../font/iconfont/iconfont.css";
+
+body {
+  background-color: #f5f5f5;
+  user-select: none;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  display: inline-block;
+  text-decoration: none;
+}
+
+.wrap {
+  width: 1000px;
+  margin: 0 auto;
+}
+
+i {
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'iconfont';  /* project id 2233006 */
+  src: url('//at.alicdn.com/t/font_2233006_36kyos0gdn9.eot');
+  src: url('//at.alicdn.com/t/font_2233006_36kyos0gdn9.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_2233006_36kyos0gdn9.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_2233006_36kyos0gdn9.woff') format('woff'),
+  url('//at.alicdn.com/t/font_2233006_36kyos0gdn9.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_2233006_36kyos0gdn9.svg#iconfont') format('svg');
+}

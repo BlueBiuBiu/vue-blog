@@ -1,0 +1,68 @@
+<template>
+  <div class="wrap">
+    <Nav />
+    <div v-for="(item,index) in result" :key="index">
+      <Article :content="item"/>
+    </div>
+    <div class="footer">
+      <a-pagination
+        show-quick-jumper
+        :default-current="1"
+        :page-size="pageSize"
+        :total="total"
+        @change="onChange"
+      />
+    </div>
+    <div class="right">
+      <div class="search">
+        <input type="text" />
+        <a href="" class="icon">
+          <img src="~assets/img/search.svg" alt="" />
+        </a>
+      </div>
+      <Profile />
+      <Music />
+      <div class="article"></div>
+    </div>
+  </div>
+</template>
+
+<script>
+import Article from "components/article/Article";
+import Music from "components/music/Music"
+import Nav from "components/nav/Nav"
+import Profile from "components/profile/Profile"
+
+import { getMomentList, getMomentListLength } from "network/home"
+
+export default {
+  name: "",
+  data() {
+    return {
+      result: [],
+      total: 0,
+      pageSize: 3,
+    };
+  },
+  components: {
+    Article,
+    Music,
+    Nav,
+    Profile
+  },
+  methods: {
+    async onChange(pageNumber) {
+      // console.log("Page: ", pageNumber);
+      this.result = await getMomentList((pageNumber-1)*3,3)
+    }
+  },
+  async created(){
+    this.result = await getMomentList(0,3)
+    this.total = await getMomentListLength()
+  }
+};
+</script>
+
+<style scoped>
+@import "~assets/css/home.css";
+</style>
