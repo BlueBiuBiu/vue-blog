@@ -2,11 +2,11 @@
   <div class="nav">
     <div class="title">skyblog</div>
     <div class="nav-item">
-      <a href="">
+      <a href="" @click="home">
         <i>&#xe600;</i>
         <span>首页</span>
       </a>
-      <a href="">
+      <a href="" @click="writeArticle">
         <i>&#xe792;</i>
         <span>写文章</span>
       </a>
@@ -45,8 +45,16 @@ export default {
       e.preventDefault();
       this.$emit("article",1)
     },
+    home(e){
+      e.preventDefault();
+      this.$router.push("/home")
+    },
     login(){
-      this.$router.push("/login")
+      this.$router.replace("/login")
+    },
+    writeArticle(e){
+      e.preventDefault()
+      this.$router.push("/writeArticle")
     }
   },
   created() {

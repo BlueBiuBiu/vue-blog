@@ -1,6 +1,7 @@
 import Vue from "vue"
 import vueRouter from "vue-router"
 const Home = () => import("views/home/Home")
+const WriteArticle = () => import("views/writeArticle/WriteArticle")
 const ArticleDetail = () => import("views/articleDetail/ArticleDetail")
 const Login = () => import("views/login/Login")
 const Register = () => import("views/register/Register")
@@ -15,6 +16,10 @@ const routes = [
   {
     path: "/home",
     component: Home
+  },
+  {
+    path: "/writeArticle",
+    component: WriteArticle
   },
   {
     path: "/articleDetail",

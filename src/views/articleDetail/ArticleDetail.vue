@@ -1,5 +1,6 @@
 <template>
   <div class="article-detail wrap">
+    <Nav />
     <div class="title">
       {{articleDetail.title}}
     </div>
@@ -10,12 +11,17 @@
 </template>
 
 <script>
+import Nav from "components/nav/Nav"
+
 export default {
   name: '',
   data() {
     return {
       articleDetail: {}
     }
+  },
+  components: {
+    Nav
   },
   created() {
     this.articleDetail = this.$store.state.articleDetail
@@ -32,7 +38,7 @@ export default {
     width: 100%;
     font-size: 25px;
     font-weight: 700;
-    margin-top: 70px;
+    margin-top: 30px;
     text-align: center;
   }
 
