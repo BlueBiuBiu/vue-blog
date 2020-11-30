@@ -8,7 +8,8 @@ import moduleA from './modules/moduleA'
 Vue.use(vuex)
 
 const state = {
-  userInfo: {}
+  userInfo: {},
+  articleDetail: {}
 }
 
 const store = new vuex.Store({

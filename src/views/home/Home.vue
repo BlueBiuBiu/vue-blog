@@ -2,7 +2,7 @@
   <div class="wrap">
     <Nav @article="article"/>
     <div v-for="(item,index) in result" :key="index">
-      <Article :content="item"/>
+      <Article :content="item" :articlebgc="articlebgc[index]" />
     </div>
     <div class="footer">
       <a-pagination
@@ -42,7 +42,12 @@ export default {
       result: [],
       total: 0,
       pageSize: 3,
-      type: 1
+      type: 1,
+      articlebgc: [
+        "articlebgc2",
+        "articlebgc3",
+        "articlebgc1"
+      ]
     };
   },
   components: {

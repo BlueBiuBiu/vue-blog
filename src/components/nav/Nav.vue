@@ -67,6 +67,7 @@ export default {
   line-height: 49px;
   text-align: center;
   background-color: rgba(0, 0, 0, .4);
+  border: 1px solid rgb(6, 177, 245);
   color: #fff;
 }
 
