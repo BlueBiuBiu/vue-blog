@@ -21,8 +21,8 @@ export default {
       content: ""
     }
   },
-  mounted() {
-    if(this.$store.state.userInfo){
+  created() {
+    if(this.$store.state.userInfo.id){
       this.username = this.$store.state.userInfo.username
     }
   },

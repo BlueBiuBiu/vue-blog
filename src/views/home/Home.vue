@@ -1,6 +1,6 @@
 <template>
   <div class="wrap">
-    <Nav />
+    <Nav @article="article"/>
     <div v-for="(item,index) in result" :key="index">
       <Article :content="item"/>
     </div>
@@ -33,7 +33,7 @@ import Music from "components/music/Music"
 import Nav from "components/nav/Nav"
 import Profile from "components/profile/Profile"
 
-import { getMomentList, getMomentListLength } from "network/home"
+import { getMomentList, getMomentProfileList, getMomentListLength, getMomentProfileLength } from "network/home"
 
 export default {
   name: "",
@@ -42,6 +42,7 @@ export default {
       result: [],
       total: 0,
       pageSize: 3,
+      type: 1
     };
   },
   components: {
@@ -53,7 +54,27 @@ export default {
   methods: {
     async onChange(pageNumber) {
       // console.log("Page: ", pageNumber);
-      this.result = await getMomentList((pageNumber-1)*3,3)
+      if (this.type) {
+        this.result = await getMomentList((pageNumber-1)*3,3)
+      } else {
+        const token = localStorage.getItem("token")
+        this.result = await getMomentProfileList((pageNumber-1)*3,3,token)
+      }
+    },
+    async article(type){
+      this.type = type
+      this.onChange(1)
+      if(!type){
+        const token = localStorage.getItem("token")
+        if(!token){
+          alert("请先登录")
+          this.$router.push("/login")
+        } else {
+          this.total = await getMomentProfileLength(token)
+        }
+      } else {
+        this.total = await getMomentListLength()
+      }
     }
   },
   async created(){

@@ -28,6 +28,7 @@
 </template>
 
 <script>
+
 export default {
   name: '',
   data() {
@@ -38,18 +39,18 @@ export default {
   methods: {
     myArticle(e){
       e.preventDefault();
-      console.log("个人文章");
+      this.$emit("article",0)
     },
     allArticle(e){
       e.preventDefault();
-      console.log("所有文章");
+      this.$emit("article",1)
     },
     login(){
       this.$router.push("/login")
     }
   },
   created() {
-    if(this.$store.state.userInfo){
+    if(this.$store.state.userInfo.id){
       this.loginTitle = "退出"
     } else {
       this.loginTitle = "登录"

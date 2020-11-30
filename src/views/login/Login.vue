@@ -65,15 +65,26 @@ export default {
       e.preventDefault();
       if(this.username && this.password){
         try {
-        const res = await login(this.username,this.password)
-        if(res.result == "ok"){
+          const res = await login(this.username,this.password)
+          if(res.result == "ok"){
             localStorage.setItem("token",res.token)
             this.$store.commit("userInfo",res)
             this.$router.replace("/home")
+          } else {
+            switch (res.error) {
+              case "用户不存在~":
+                this.validateUser = "用户不存在~"
+                break;
+              case "密码不正确~":
+                this.validatePsw = "密码不正确~"
+              default:
+                break;
+            }
           }
         } catch (error) {
           console.log(error);
         }
+
       }
     },
     register(e){

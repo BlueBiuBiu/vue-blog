@@ -66,6 +66,17 @@ export default {
       if(this.username && this.password){
         try {
           const res = await register(this.username,this.password)
+          if(res.error){
+            switch (res.error) {
+            case "用户已经存在~":
+              this.validateUser = "用户已经存在~"
+              break;
+            default:
+              break;
+            }
+          } else {
+            this.$router.replace("/login")
+          }
         } catch (error) {
           console.log(error);
         }

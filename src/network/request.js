@@ -14,7 +14,12 @@ instance.interceptors.request.use(res => {
 instance.interceptors.response.use(res => {
   return res.data
 },err => {
-  console.log(err);
+  const error = err.response.data
+  const status = err.response.status
+  return {
+    error,
+    status
+  }
 })
 
 export default instance

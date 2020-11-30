@@ -200,7 +200,7 @@ export default {
 .music .player {
   width: 280px;
   height: 100px;
-  margin: 10px auto;
+  margin: 20px auto;
   border-radius: 15px;
   text-align: left;
   background-color: rgba(10, 172, 241, 0.3);
