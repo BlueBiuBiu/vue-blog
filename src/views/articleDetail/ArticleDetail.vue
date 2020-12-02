@@ -11,7 +11,7 @@
       <div>评论区</div>
       <a-comment  v-for="(item,index) in comments" :key="index">
         <span slot="actions" key="comment-nested-reply-to">
-          <span class="replyName" @click="reply(item.user.id,index,$event)">回复</span>  
+          <span class="replyName" @click="reply(item.id,index,$event)">回复</span>  
           {{item.commentId | replyName}}
         </span>
         <a slot="author">{{item.user.username}}</a>
@@ -41,6 +41,42 @@
             @cancel="handleCancel">
             <p>{{ ModalText }}</p>
           </a-modal>
+        </div>
+        <div v-if="item.childs.length">
+          <a-comment  v-for="(child,indey) in item.childs" :key="indey">
+            <span slot="actions">
+              <span class="replyName" @click="reply2(child.id,indey,$event)">回复</span>  
+              {{child.commentId | replyName}}
+            </span>
+            <a slot="author">{{child.user.username}}</a>
+            <a-avatar
+              slot="avatar"
+              src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+              alt="Han Solo"
+            />
+            <p slot="content">{{child.content}}</p>
+            <a-tooltip slot="datetime" :title="moment(child.createTime).format('YYYY-MM-DD HH:mm:ss')">
+              <span>{{ moment(child.createTime).format("YYYY-MM-DD")}}</span>
+            </a-tooltip>
+            <div slot="content" v-if="indey == replyIndey" @click="replyContent2">
+              <a-form-item>
+                <a-textarea :rows="4" :value="replyValue2" @change="handleReplyChange2" />
+              </a-form-item>
+              <a-form-item class="btn">
+                <a-button html-type="submit" type="primary" @click="handleSubmit2">
+                  提交评论
+                </a-button>
+              </a-form-item>
+              <a-modal
+                title="温馨提醒"
+                :visible="visible"
+                :confirm-loading="confirmLoading"
+                @ok="handleOk"
+                @cancel="handleCancel">
+                <p>{{ ModalText }}</p>
+              </a-modal>
+            </div>
+          </a-comment>
         </div>
       </a-comment>
       <div slot="content">
@@ -85,13 +121,17 @@ export default {
       moment,
       submitContent: "",
       replyValue: "",
+      replyValue2: "",
       userInfo: {},
       ModalText: '请先登录，是否前往登录?',
       visible: false,
       confirmLoading: false,
       replyTo: null,
+      replyTo2: null,
       replyIndex: -1,
-      tempIndex: 0
+      replyIndey: -1,
+      tempIndex: 0,
+      tempIndey: 0,
     }
   },
   components: {
@@ -104,6 +144,9 @@ export default {
     handleReplyChange(e){
       this.replyValue = e.target.value
     },
+    handleReplyChange2(e){
+      this.replyValue2 = e.target.value
+    },
     async handleSubmit(){
       if(!this.userInfo.id){
         this.visible = true
@@ -113,11 +156,28 @@ export default {
         if(!submitText){
           this.$message.warn("评论内容不能为空")
         } else {
-           await uploadComment(submitText,this.articleDetail.id,this.replyTo,token)
+          await uploadComment(submitText,this.articleDetail.id,this.replyTo,token)
           this.$message.success('评论成功!')
           this.submitContent = ""
           this.replyValue = ""
           this.replyIndex = -1
+        }
+      }
+    },
+    async handleSubmit2(){
+      if(!this.userInfo.id){
+        this.visible = true
+      } else {
+        const token = sessionStorage.getItem("token")
+        const submitText = this.replyValue2
+        if(!submitText){
+          this.$message.warn("评论内容不能为空")
+        } else {
+          await uploadComment(submitText,this.articleDetail.id,this.replyTo2,token)
+          this.$message.success('评论成功!')
+          this.replyValue2 = ""
+          this.replyValue = ""
+          this.replyIndey = -1
         }
       }
     },
@@ -127,15 +187,25 @@ export default {
     handleCancel(e) {
       this.visible = false;
     },
-    async reply(commentId,index,e){
+    reply(commentId,index,e){
       e.stopPropagation()
       this.replyTo = commentId
       this.replyIndex = index
       this.tempIndex = index
     },
+    reply2(commentId,indey,e){
+      e.stopPropagation()
+      this.replyTo2 = commentId
+      this.replyIndey = indey
+      this.tempIndey = indey
+    },
     replyContent(e){
       e.stopPropagation()
       this.replyIndex = this.tempIndex
+    },
+    replyContent2(e){
+      e.stopPropagation()
+      this.replyIndey = this.tempIndey
     }
   },
   beforeCreate(){
@@ -156,13 +226,39 @@ export default {
     this.comments = this.articleDetail.comments
     this.labels = this.articleDetail.labels
     this.userInfo = this.$store.state.userInfo
+    for(let id of this.comments){
+      id.childs = []
+      console.log(id);
+      for(let comment of this.comments){
+        if(id.id === comment.commentId){
+          id.childs.push(comment)
+        }
+        for(let child of id.childs){
+          if(child.id === comment.commentId){
+            id.childs.push(comment)
+          }
+        }
+      }
+    }
   },
   async updated() {
     this.articleDetail = await getDetailMoment(this.articleDetail.id)
     this.comments = this.articleDetail.comments
     this.labels = this.articleDetail.labels
+    for(let id of this.comments){
+      id.childs = []
+      for(let comment of this.comments){
+        if(id.id === comment.commentId){
+          id.childs.push(comment)
+        }
+        for(let child of id.childs){
+          if(child.id === comment.commentId){
+            id.childs.push(comment)
+          }
+        }
+      }
+    }
   },
-
 }
 
 document.body.onclick = function() {
