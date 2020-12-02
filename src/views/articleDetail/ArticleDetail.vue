@@ -105,14 +105,20 @@ export default {
       this.replyValue = e.target.value
     },
     async handleSubmit(){
-      if(!this.userInfo.id && this.submitContent){
+      if(!this.userInfo.id){
         this.visible = true
       } else {
         const token = sessionStorage.getItem("token")
         const submitText = this.submitContent || this.replyValue
-        await uploadComment(submitText,this.articleDetail.id,this.replyTo,token)
-        this.$message.success('评论成功!');
-        this.submitContent = ""
+        if(!submitText){
+          this.$message.warn("评论内容不能为空")
+        } else {
+           await uploadComment(submitText,this.articleDetail.id,this.replyTo,token)
+          this.$message.success('评论成功!')
+          this.submitContent = ""
+          this.replyValue = ""
+          this.replyIndex = -1
+        }
       }
     },
     handleOk(e) {
