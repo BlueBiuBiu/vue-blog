@@ -10,6 +10,8 @@
 </template>
 
 <script>
+import { getDetailMoment } from "network/home"
+
 export default {
   name: '',
   data() {
@@ -22,11 +24,12 @@ export default {
     }
   },
   methods: {
-    detail(){
+    async detail(){
+      const result = await getDetailMoment(this.content.id)
       this.$router.push("/articleDetail")
       this.$store.commit({
         type: "article",
-        detail: this.content
+        detail: result
       })
     }
   },

@@ -13,3 +13,18 @@ export function uploadArticle(title,content,token){
     }
   })
 } 
+
+export function uploadComment(content,momentId,token){
+  return request({
+    url: `/comment`,
+    method: "POST",
+    headers: {
+      authorization: `Bearer ${token}`
+    },
+    data: {
+      content,
+      momentId
+    }
+  })
+} 
+

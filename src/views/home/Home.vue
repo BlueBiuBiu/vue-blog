@@ -71,7 +71,7 @@ export default {
           this.result = await getMomentList((pageNumber-1)*3,3)
         }
       } else {
-        const token = localStorage.getItem("token")
+        const token = sessionStorage.getItem("token")
         if(this.isSearch){
           this.threeResult()
         } else {
@@ -84,7 +84,7 @@ export default {
       this.isSearch = false
       this.onChange(1)
       if(!type){
-        const token = localStorage.getItem("token")
+        const token = sessionStorage.getItem("token")
         if(!token){
           alert("请先登录")
           this.$router.push("/login")
@@ -117,7 +117,7 @@ export default {
           this.threeResult()
         }
       } else {
-        const token = localStorage.getItem("token")
+        const token = sessionStorage.getItem("token")
         if(!token){
           alert("请先登录")
           this.$router.push("/login")

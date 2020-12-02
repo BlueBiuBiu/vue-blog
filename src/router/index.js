@@ -19,11 +19,14 @@ const routes = [
   },
   {
     path: "/writeArticle",
-    component: WriteArticle
+    component: WriteArticle,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/articleDetail",
-    component: ArticleDetail
+    component: ArticleDetail,
   },
   {
     path: "/login",

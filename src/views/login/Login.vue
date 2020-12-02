@@ -67,7 +67,7 @@ export default {
         try {
           const res = await login(this.username,this.password)
           if(res.result == "ok"){
-            localStorage.setItem("token",res.token)
+            sessionStorage.setItem("token",res.token)
             this.$store.commit("userInfo",res)
             this.$router.replace("/home")
           } else {

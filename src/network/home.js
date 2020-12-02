@@ -37,3 +37,9 @@ export function getMomentProfileLength(token){
     }
   })
 } 
+
+export function getDetailMoment(id){
+  return request({
+    url: `/moment/${id}`
+  })
+} 

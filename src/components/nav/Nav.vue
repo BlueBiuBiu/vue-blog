@@ -1,6 +1,14 @@
 <template>
   <div class="nav">
     <div class="title">skyblog</div>
+    <a-modal
+          title="温馨提醒"
+          :visible="visible"
+          :confirm-loading="confirmLoading"
+          @ok="handleOk"
+          @cancel="handleCancel">
+          <p>{{ ModalText }}</p>
+    </a-modal>
     <div class="nav-item">
       <a href="" @click="home">
         <i>&#xe600;</i>
@@ -24,7 +32,7 @@
         <span @click="login">{{loginTitle}}</span>
       </a>
     </div>
-    </div>
+  </div>
 </template>
 
 <script>
@@ -34,6 +42,10 @@ export default {
   data() {
     return {
       loginTitle: "",
+      userInfo: {},
+      ModalText: '请先登录，是否前往登录?',
+      visible: false,
+      confirmLoading: false,
     }
   },
   methods: {
@@ -54,8 +66,18 @@ export default {
     },
     writeArticle(e){
       e.preventDefault()
-      this.$router.push("/writeArticle")
-    }
+      if(!this.userInfo.id){
+        this.visible = true
+      } else {
+        this.$router.push("/writeArticle") 
+      }
+    },
+    handleOk(e) {
+      this.$router.push("/login")
+    },
+    handleCancel(e) {
+      this.visible = false;
+    },
   },
   created() {
     if(this.$store.state.userInfo.id){
@@ -63,6 +85,7 @@ export default {
     } else {
       this.loginTitle = "登录"
     }
+    this.userInfo = this.$store.state.userInfo
   },
 }
 </script>
