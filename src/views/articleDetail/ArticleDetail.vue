@@ -9,10 +9,10 @@
     </div>
     <div class="comment" v-if="comments[0].id">
       <div>评论区</div>
-      <a-comment  v-for="(item,index) in comments" :key="index">
+      <div v-for="(item,index) in comments" :key="index">
+        <a-comment v-if="!item.commentId">
         <span slot="actions" key="comment-nested-reply-to">
           <span class="replyName" @click="reply(item.id,index,$event)">回复</span>  
-          {{item.commentId | replyName}}
         </span>
         <a slot="author">{{item.user.username}}</a>
         <a-avatar
@@ -79,6 +79,7 @@
           </a-comment>
         </div>
       </a-comment>
+      </div>
       <div slot="content">
         <a-form-item>
           <a-textarea :rows="4" :value="submitContent" @change="handleChange" />
@@ -117,6 +118,7 @@ export default {
     return {
       articleDetail: {},
       comments: [],
+      firstComments: [],
       labels: [],
       moment,
       submitContent: "",
@@ -228,7 +230,6 @@ export default {
     this.userInfo = this.$store.state.userInfo
     for(let id of this.comments){
       id.childs = []
-      console.log(id);
       for(let comment of this.comments){
         if(id.id === comment.commentId){
           id.childs.push(comment)
