@@ -8,9 +8,10 @@
       {{articleDetail.content}}
     </div>
     <div class="comment" v-if="comments[0].id">
+      <div>评论区</div>
       <a-comment  v-for="(item,index) in comments" :key="index">
         <span slot="actions" key="comment-nested-reply-to">
-          <span class="replyName">回复</span>  
+          <span class="replyName" @click="reply(item.user.id,index,$event)">回复</span>  
           {{item.commentId | replyName}}
         </span>
         <a slot="author">{{item.user.username}}</a>
@@ -23,6 +24,24 @@
         <a-tooltip slot="datetime" :title="moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')">
           <span>{{ moment(item.createTime).format("YYYY-MM-DD")}}</span>
         </a-tooltip>
+        <div slot="content" v-if="index == replyIndex" @click="replyContent">
+          <a-form-item>
+            <a-textarea :rows="4" :value="replyValue" @change="handleReplyChange" />
+          </a-form-item>
+          <a-form-item class="btn">
+            <a-button html-type="submit" type="primary" @click="handleSubmit">
+              提交评论
+            </a-button>
+          </a-form-item>
+          <a-modal
+            title="温馨提醒"
+            :visible="visible"
+            :confirm-loading="confirmLoading"
+            @ok="handleOk"
+            @cancel="handleCancel">
+            <p>{{ ModalText }}</p>
+          </a-modal>
+        </div>
       </a-comment>
       <div slot="content">
         <a-form-item>
@@ -64,11 +83,15 @@ export default {
       comments: [],
       labels: [],
       moment,
-      submitContent: [],
+      submitContent: "",
+      replyValue: "",
       userInfo: {},
       ModalText: '请先登录，是否前往登录?',
       visible: false,
       confirmLoading: false,
+      replyTo: null,
+      replyIndex: -1,
+      tempIndex: 0
     }
   },
   components: {
@@ -76,14 +99,18 @@ export default {
   },
   methods: {
     handleChange(e){
-      this.submitContent = e.target.value;
+      this.submitContent = e.target.values
+    },
+    handleReplyChange(e){
+      this.replyValue = e.target.value
     },
     async handleSubmit(){
-      if(!this.userInfo.id){
+      if(!this.userInfo.id && this.submitContent){
         this.visible = true
       } else {
         const token = sessionStorage.getItem("token")
-        await uploadComment(this.submitContent,this.articleDetail.id,token)
+        const submitText = this.submitContent || this.replyValue
+        await uploadComment(submitText,this.articleDetail.id,this.replyTo,token)
         this.$message.success('评论成功!');
         this.submitContent = ""
       }
@@ -94,6 +121,16 @@ export default {
     handleCancel(e) {
       this.visible = false;
     },
+    async reply(commentId,index,e){
+      e.stopPropagation()
+      this.replyTo = commentId
+      this.replyIndex = index
+      this.tempIndex = index
+    },
+    replyContent(e){
+      e.stopPropagation()
+      this.replyIndex = this.tempIndex
+    }
   },
   beforeCreate(){
     that = this
@@ -121,6 +158,11 @@ export default {
   },
 
 }
+
+document.body.onclick = function() {
+  that.replyIndex = -1
+}
+
 </script>
 
 <style scoped>
@@ -141,7 +183,7 @@ export default {
     line-height: 35px;
     border-radius: 12px;
     color: #000;
-    background-color: antiquewhite;
+    background-color: rgb(250, 239, 225);
     padding: 50px 70px;
     margin-top: 30px;
     font-size: 17px;
@@ -153,7 +195,7 @@ export default {
     width: 100%;
     border-radius: 12px;
     color: #000;
-    background-color: antiquewhite;
+    background-color: rgb(253, 249, 243);
     padding: 50px 70px;
     margin-top: 30px;
     font-size: 17px;

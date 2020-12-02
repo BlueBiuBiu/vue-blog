@@ -14,7 +14,7 @@ export function uploadArticle(title,content,token){
   })
 } 
 
-export function uploadComment(content,momentId,token){
+export function uploadComment(content,momentId,commentId=null,token){
   return request({
     url: `/comment`,
     method: "POST",
@@ -23,7 +23,8 @@ export function uploadComment(content,momentId,token){
     },
     data: {
       content,
-      momentId
+      momentId,
+      commentId
     }
   })
 } 
