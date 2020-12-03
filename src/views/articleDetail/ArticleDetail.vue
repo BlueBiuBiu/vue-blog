@@ -7,63 +7,30 @@
     <div class="detail">
       {{articleDetail.content}}
     </div>
-    <div class="comment" v-if="comments[0].id">
+    <div class="comment">
       <div>评论区</div>
-      <div v-for="(item,index) in comments" :key="index">
-        <a-comment v-if="!item.commentId">
-        <span slot="actions" key="comment-nested-reply-to">
-          <span class="replyName" @click="reply(item.id,index,$event)">回复</span>  
-        </span>
-        <a slot="author">{{item.user.username}}</a>
-        <a-avatar
-          slot="avatar"
-          src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-          alt="Han Solo"
-        />
-        <p slot="content">{{item.content}}</p>
-        <a-tooltip slot="datetime" :title="moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')">
-          <span>{{ moment(item.createTime).format("YYYY-MM-DD")}}</span>
-        </a-tooltip>
-        <div slot="content" v-if="index == replyIndex" @click="replyContent">
-          <a-form-item>
-            <a-textarea :rows="4" :value="replyValue" @change="handleReplyChange" />
-          </a-form-item>
-          <a-form-item class="btn">
-            <a-button html-type="submit" type="primary" @click="handleSubmit">
-              提交评论
-            </a-button>
-          </a-form-item>
-          <a-modal
-            title="温馨提醒"
-            :visible="visible"
-            :confirm-loading="confirmLoading"
-            @ok="handleOk"
-            @cancel="handleCancel">
-            <p>{{ ModalText }}</p>
-          </a-modal>
-        </div>
-        <div v-if="item.childs.length">
-          <a-comment  v-for="(child,indey) in item.childs" :key="indey">
-            <span slot="actions">
-              <span class="replyName" @click="reply2(child.id,indey,$event)">回复</span>  
-              {{child.commentId | replyName}}
+      <div v-if="comments[0].id">
+        <div v-for="(item,index) in comments" :key="index">
+          <a-comment v-if="!item.commentId">
+            <span slot="actions" key="comment-nested-reply-to">
+              <span class="replyName" @click="reply(item.id,index,$event)">回复</span>  
             </span>
-            <a slot="author">{{child.user.username}}</a>
+            <a slot="author">{{item.user.username}}</a>
             <a-avatar
               slot="avatar"
               src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
               alt="Han Solo"
             />
-            <p slot="content">{{child.content}}</p>
-            <a-tooltip slot="datetime" :title="moment(child.createTime).format('YYYY-MM-DD HH:mm:ss')">
-              <span>{{ moment(child.createTime).format("YYYY-MM-DD")}}</span>
+            <p slot="content">{{item.content}}</p>
+            <a-tooltip slot="datetime" :title="moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')">
+              <span>{{ moment(item.createTime).format("YYYY-MM-DD")}}</span>
             </a-tooltip>
-            <div slot="content" v-if="indey == replyIndey" @click="replyContent2">
+            <div slot="content" v-if="index == replyIndex" @click="replyContent">
               <a-form-item>
-                <a-textarea :rows="4" :value="replyValue2" @change="handleReplyChange2" />
+                <a-textarea :rows="4" :value="replyValue" @change="handleReplyChange" />
               </a-form-item>
               <a-form-item class="btn">
-                <a-button html-type="submit" type="primary" @click="handleSubmit2">
+                <a-button html-type="submit" type="primary" @click="handleSubmit">
                   提交评论
                 </a-button>
               </a-form-item>
@@ -76,9 +43,44 @@
                 <p>{{ ModalText }}</p>
               </a-modal>
             </div>
+            <div v-if="item.childs.length">
+              <a-comment  v-for="(child,indey) in item.childs" :key="indey">
+                <span slot="actions">
+                  <span class="replyName" @click="reply2(child.id,indey,$event)">回复</span>  
+                  {{child.commentId | replyName}}
+                </span>
+                <a slot="author">{{child.user.username}}</a>
+                <a-avatar
+                  slot="avatar"
+                  src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                  alt="Han Solo"
+                />
+                <p slot="content">{{child.content}}</p>
+                <a-tooltip slot="datetime" :title="moment(child.createTime).format('YYYY-MM-DD HH:mm:ss')">
+                  <span>{{ moment(child.createTime).format("YYYY-MM-DD")}}</span>
+                </a-tooltip>
+                <div slot="content" v-if="indey == replyIndey" @click="replyContent2">
+                  <a-form-item>
+                    <a-textarea :rows="4" :value="replyValue2" @change="handleReplyChange2" />
+                  </a-form-item>
+                  <a-form-item class="btn">
+                    <a-button html-type="submit" type="primary" @click="handleSubmit2">
+                      提交评论
+                    </a-button>
+                  </a-form-item>
+                  <a-modal
+                    title="温馨提醒"
+                    :visible="visible"
+                    :confirm-loading="confirmLoading"
+                    @ok="handleOk"
+                    @cancel="handleCancel">
+                    <p>{{ ModalText }}</p>
+                  </a-modal>
+                </div>
+              </a-comment>
+            </div>
           </a-comment>
         </div>
-      </a-comment>
       </div>
       <div slot="content">
         <a-form-item>
@@ -141,7 +143,7 @@ export default {
   },
   methods: {
     handleChange(e){
-      this.submitContent = e.target.values
+      this.submitContent = e.target.value
     },
     handleReplyChange(e){
       this.replyValue = e.target.value
@@ -228,15 +230,17 @@ export default {
     this.comments = this.articleDetail.comments
     this.labels = this.articleDetail.labels
     this.userInfo = this.$store.state.userInfo
-    for(let id of this.comments){
-      id.childs = []
-      for(let comment of this.comments){
-        if(id.id === comment.commentId){
-          id.childs.push(comment)
-        }
-        for(let child of id.childs){
-          if(child.id === comment.commentId){
+    if(this.comments[0].id){
+      for(let id of this.comments){
+        id.childs = []
+        for(let comment of this.comments){
+          if(id.id === comment.commentId){
             id.childs.push(comment)
+          }
+          for(let child of id.childs){
+            if(child.id === comment.commentId){
+              id.childs.push(comment)
+            }
           }
         }
       }
@@ -246,15 +250,17 @@ export default {
     this.articleDetail = await getDetailMoment(this.articleDetail.id)
     this.comments = this.articleDetail.comments
     this.labels = this.articleDetail.labels
-    for(let id of this.comments){
-      id.childs = []
-      for(let comment of this.comments){
-        if(id.id === comment.commentId){
-          id.childs.push(comment)
-        }
-        for(let child of id.childs){
-          if(child.id === comment.commentId){
+    if(this.comments[0].id){
+      for(let id of this.comments){
+        id.childs = []
+        for(let comment of this.comments){
+          if(id.id === comment.commentId){
             id.childs.push(comment)
+          }
+          for(let child of id.childs){
+            if(child.id === comment.commentId){
+              id.childs.push(comment)
+            }
           }
         }
       }
