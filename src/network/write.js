@@ -29,3 +29,16 @@ export function uploadComment(content,momentId,commentId=null,token){
   })
 } 
 
+export function uploadAvatar(token,avatar){
+  return request({
+    url: `/upload/avatar`,
+    method: "POST",
+    headers: {
+      authorization: `Bearer ${token}`,
+      'Content-Type': 'multipart/form-data'
+    },
+    data: avatar
+  })
+} 
+
+

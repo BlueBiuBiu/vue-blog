@@ -42,4 +42,10 @@ export function getDetailMoment(id){
   return request({
     url: `/moment/${id}`
   })
-} 
+}
+
+export function getUserInfo(id){
+  return request({
+    url: `/user/${id}/info`
+  })
+}
