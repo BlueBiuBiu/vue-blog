@@ -1,5 +1,13 @@
 <template>
   <div class="article">
+    <a-modal
+          title="温馨提醒"
+          :visible="visible"
+          :confirm-loading="confirmLoading"
+          @ok="handleOk"
+          @cancel="handleCancel">
+          <p>{{ ModalText }}</p>
+    </a-modal>
     <div class="title">
       <span v-for="(item,index) in title" 
             :key="index" 
@@ -9,8 +17,8 @@
         {{item}}
       </span>
     </div>
-    <div class="list">
-      <div v-for="(item,index) in list" :key="index" class="list-item">
+    <div class="list" v-if="list.length">
+      <div v-for="(item,index) in list" :key="index" class="list-item" @click="detail(item.id)">
         <span class="list-title">{{item.title}}</span>
         <span class="author">作者:</span>
         <span class="username">
@@ -22,15 +30,22 @@
 </template>
 
 <script>
-import { getMomentList, getMomentListLength } from "network/home"
+import { getMomentList, 
+         getMomentListLength, 
+         getMomentProfileList, 
+         getMomentProfileLength, 
+         getDetailMoment } from "network/home"
 
 export default {
   name: '',
   data() {
     return {
-      title: ["最新文章","所有文章","留言"],
-      currentIndex: 0,
-      list: []
+      title: ["个人文章","所有文章","留言"],
+      currentIndex: 1,
+      list: [],
+      ModalText: '请先登录，是否前往登录?',
+      visible: false,
+      confirmLoading: false,
     }
   },
   methods: {
@@ -38,16 +53,41 @@ export default {
       this.currentIndex = index
       switch(index){
         case 0:
+          if(!this.$store.state.userInfo.id){
+            this.visible = true
+          } else {
+            const token = sessionStorage.getItem("token")
+            const profileLength = await getMomentProfileLength(token)
+            this.list = await getMomentProfileList(0,profileLength,token)
+          }
           break;
         case 1:
           const length = await getMomentListLength()
           this.list = await getMomentList(0,length)
-          console.log(this.list);
           break;
         default:
+          this.list = []
           break;
       }
-    }
+    },
+    async detail(id){
+      const result = await getDetailMoment(id)
+      this.$router.push("/articleDetail")
+      this.$store.commit({
+      type: "article",
+      detail: result
+      })
+    },
+    handleOk(e) {
+      this.$router.push("/login")
+    },
+    handleCancel(e) {
+      this.visible = false;
+    },
+  },
+  async created() {
+    const length = await getMomentListLength()
+    this.list = await getMomentList(0,length)
   }
 }
 </script>
@@ -91,6 +131,7 @@ export default {
     color: rgb(6, 177, 245);
     overflow-y: scroll;
     height: 305px;
+    padding-top: 20px;
     background-color: #f5f5f5;
   }
 
@@ -116,6 +157,12 @@ export default {
     height: 40px;
     line-height: 40px;
     position: relative;
+  }
+
+  .list .list-item:hover {
+    cursor: pointer;
+    color: #fff;
+    background-color: rgba(6, 177, 245,.5);
   }
 
   .list .list-item .list-title {
