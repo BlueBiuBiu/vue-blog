@@ -22,7 +22,7 @@
       </div>
       <Profile />
       <Music />
-      <div class="article"></div>
+      <RecentArticle />
     </div>
   </div>
 </template>
@@ -32,6 +32,7 @@ import Article from "components/article/Article";
 import Music from "components/music/Music"
 import Nav from "components/nav/Nav"
 import Profile from "components/profile/Profile"
+import RecentArticle from "./childComs/recentArticle"
 
 import { getMomentList, getMomentProfileList, getMomentListLength, getMomentProfileLength } from "network/home"
 
@@ -59,7 +60,8 @@ export default {
     Article,
     Music,
     Nav,
-    Profile
+    Profile,
+    RecentArticle
   },
   methods: {
     async onChange(pageNumber) {

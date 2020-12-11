@@ -132,6 +132,7 @@ export default {
   margin: 0 auto;
   padding: 3px 10px;
   background-color: rgba(6, 177, 245,.5);
+  border: 1px solid rgb(6, 177, 245);
 }
 
 .profile .upload:hover {

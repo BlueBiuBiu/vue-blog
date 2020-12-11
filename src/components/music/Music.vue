@@ -211,7 +211,6 @@ export default {
   width: 75px;
   height: 75px;
   border-radius: 50%;
-  margin: 0 10px;
   animation: rotate 3.5s infinite linear;
 }
 
@@ -229,6 +228,7 @@ export default {
   display: flex;
   align-items: center;
   padding-top: 10px;
+  padding-left: 10px;
 }
 
 .music .player .title .name {

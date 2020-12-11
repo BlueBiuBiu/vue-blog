@@ -82,14 +82,5 @@
   height: 25px;
 }
 
-/* article */
-.right .article {
-  width: 350px;
-  height: 350px;
-  border-radius: 5px;
-  margin-top: 10px;
-  text-align: center;
-  background-color: rgba(0, 0, 0, .4);
-  border: 1px solid rgb(6, 177, 245);
-}
+
 
