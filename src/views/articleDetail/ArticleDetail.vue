@@ -4,8 +4,7 @@
     <div class="title">
       {{articleDetail.title}}
     </div>
-    <div class="detail">
-      {{articleDetail.content}}
+    <div class="detail" v-html="articleDetail.content">
     </div>
     <div class="comment">
       <div>评论区</div>
