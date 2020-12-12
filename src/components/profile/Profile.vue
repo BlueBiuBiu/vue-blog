@@ -131,7 +131,7 @@ export default {
   height: 22px;
   margin: 0 auto;
   padding: 3px 10px;
-  background-color: rgba(6, 177, 245,.5);
+  background-color: rgba(6, 177, 245,.7);
   border: 1px solid rgb(6, 177, 245);
 }
 

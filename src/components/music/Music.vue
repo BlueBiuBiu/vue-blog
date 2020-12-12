@@ -204,7 +204,7 @@ export default {
   margin: 20px auto;
   border-radius: 15px;
   text-align: left;
-  background-color: rgba(10, 172, 241, 0.3);
+  background-color: rgba(6, 177, 245, .7);
 }
 
 .music .player img:first-of-type {

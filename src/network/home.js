@@ -10,6 +10,16 @@ export function getMomentList(offset,limit){
   })
 } 
 
+export function getRecentMomentList(offset,limit){
+  return request({
+    url: `/moment/recent/moment`,
+    params: {
+      offset,
+      limit
+    }
+  })
+} 
+
 export function getMomentProfileList(offset,limit,token){
   return request({
     url: `/moment/profile/list`,

@@ -34,13 +34,15 @@ import { getMomentList,
          getMomentListLength, 
          getMomentProfileList, 
          getMomentProfileLength, 
-         getDetailMoment } from "network/home"
+         getDetailMoment,
+         getRecentMomentList 
+        } from "network/home"
 
 export default {
   name: '',
   data() {
     return {
-      title: ["个人文章","所有文章","留言"],
+      title: ["个人文章","所有文章","最新文章"],
       currentIndex: 1,
       list: [],
       ModalText: '请先登录，是否前往登录?',
@@ -66,7 +68,8 @@ export default {
           this.list = await getMomentList(0,length)
           break;
         default:
-          this.list = []
+          const recentLength = await getMomentListLength()
+          this.list = await getRecentMomentList(0,recentLength)
           break;
       }
     },
@@ -128,11 +131,10 @@ export default {
   }
 
   .article .list {
-    color: rgb(6, 177, 245);
+    color: #fff;
     overflow-y: scroll;
     height: 305px;
-    padding-top: 20px;
-    background-color: #f5f5f5;
+    background-color: rgba(6, 177, 245,.7);
   }
 
   /* 滑轮样式 */
@@ -143,13 +145,13 @@ export default {
   /*定义滚动条轨道 内阴影+圆角*/
   ::-webkit-scrollbar-track {
     border-radius: 10px;
-    background-color: #999;
+    background-color: rgb(6, 177, 245);
   }
 
   /*定义滑块 内阴影+圆角*/
   ::-webkit-scrollbar-thumb {
     border-radius: 10px;
-    background-color: rgb(6, 177, 245);
+    background-color: #fff;
   }
 
   .list .list-item {
@@ -161,8 +163,8 @@ export default {
 
   .list .list-item:hover {
     cursor: pointer;
-    color: #fff;
-    background-color: rgba(6, 177, 245,.5);
+    color: rgb(6, 177, 245);
+    background-color: #f5f5f5;
   }
 
   .list .list-item .list-title {
